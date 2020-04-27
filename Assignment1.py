@@ -20,32 +20,32 @@ def ReadPdb( PdbFile ):
         - ResNames, a list of residue names.
     """
     
-    #ENTER YOUR CODE TO GET Pos, ResNames here. Manipulate them until you get them in the required format, then use the return statement below to return these... 
+    # ENTER YOUR CODE TO GET Pos, ResNames here. 
+    # Manipulate them until you get them in the required format, 
+    #  then use the return statement below to return these... 
     ResNames = []
 
      
     with open(PdbFile) as pdb:
         for line in pdb:
-            line = line.split()
-            
             # that means line is "TER" or the end
-            if len(line) == 1:
+            if line[0:3] == "TER":
                 break
             
-            atom_name = line[2]
+            atom_name = line[12:16].strip()
 
             if atom_name == "CA":
-                ResName = line[3]
+                ResName = line[17:20].strip()
                 ResNames.append(ResName)
                  
-                x_coord = float(line[5])
-                y_coord = float(line[6])
-                z_coord = float(line[7])
+                x_coord = float(line[30:38].strip())
+                y_coord = float(line[38:46].strip())
+                z_coord = float(line[46:54].strip())
 
                 coords =  np.array([x_coord, y_coord, z_coord])
                 
                 # this allows subsequent coordinates to be stacked below
-                if line[4] == '1':                      
+                if line[22:26].strip() == '1':                      
                     Pos = coords
                 else:
                     Pos = np.vstack((Pos, coords)) # stack Pos on top of newly created array
@@ -141,4 +141,9 @@ if __name__=='__main__':
         nres.append(N)
 
     #ONCE YOU ARE DONE LOOKING AT ALL PDB FILES, YOU WANT TO MAKE SOME PLOTS.
+    print(Rglist)
+    print(Rgphobiclist)
+    print(nres) 
     
+     
+        
