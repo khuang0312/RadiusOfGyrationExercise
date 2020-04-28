@@ -9,7 +9,7 @@ import numpy as np
 
 
 import os
-import pylab as pp
+import matplotlib.pyplot as plt 
 
 def ReadPdb( PdbFile ):
     """Reads a PDB file with a name provided in the argument. 
@@ -141,9 +141,23 @@ if __name__=='__main__':
         nres.append(N)
 
     #ONCE YOU ARE DONE LOOKING AT ALL PDB FILES, YOU WANT TO MAKE SOME PLOTS.
-    print(Rglist)
-    print(Rgphobiclist)
-    print(nres) 
+    plot_data = {x : (y, z) for x, y, z in zip(nres, Rglist, Rgphobiclist)}
+    nres = sorted(plot_data)
+    Rglist = [plot_data[n][0] for n in nres]
+    Rgphobiclist = [plot_data[n][1] for n in nres]
+    RgOverRgphobic = [x/y for x, y in zip(Rglist, Rgphobiclist)]
     
-     
-        
+    # plot 1 (combined)
+    plt.plot(nres, Rglist, color='#444444', linestyle='--', marker='.', label='Rg')
+    plt.plot(nres, Rgphobiclist, color='#00FF00', linestyle='-', marker='D',  label='Rg,phobic')
+
+    plt.xlabel('Chain Length (number of residues)')
+    plt.title('Radius of Gyration of Amino Acids (all vs. hydrophobic) to Number of Residues')
+    plt.legend()
+    plt.show()
+    
+    #Plot 2
+    plt.plot(nres, RgOverRgphobic, color='#444444', linestyle='--', marker='.')
+    plt.xlabel('Chain Length (number of residues)')
+    plt.ylabel('Rg/Rg,phobic')
+    plt.show() 
